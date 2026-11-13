@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="Bowl of toor dal">
+  <rect width="800" height="600" fill="#fdf8ec"/>
+  <circle cx="400" cy="300" r="192" fill="#faefd3"/>
+
+  <!-- dal mound -->
+  <ellipse cx="400" cy="330" rx="134" ry="58" fill="#f0c65a"/>
+  <ellipse cx="400" cy="338" rx="148" ry="27" fill="#f5d27f"/>
+
+  <!-- split peas -->
+  <g fill="#e5b63c">
+    <circle cx="344" cy="314" r="14"/>
+    <circle cx="392" cy="300" r="14"/>
+    <circle cx="438" cy="310" r="13"/>
+    <circle cx="368" cy="330" r="13"/>
+    <circle cx="416" cy="326" r="13"/>
+    <circle cx="462" cy="332" r="12"/>
+    <circle cx="322" cy="338" r="12"/>
+    <circle cx="486" cy="318" r="11"/>
+    <circle cx="392" cy="340" r="12"/>
+  </g>
+  <g fill="#d9a82f" fill-opacity="0.75">
+    <circle cx="356" cy="306" r="9"/>
+    <circle cx="428" cy="298" r="9"/>
+    <circle cx="404" cy="316" r="8"/>
+    <circle cx="446" cy="326" r="8"/>
+  </g>
+
+  <!-- bowl -->
+  <path d="M252 338 H548 Q536 470 400 476 Q264 470 252 338 Z" fill="#ffffff" stroke="#e6e2d6" stroke-width="5"/>
+  <path d="M270 352 Q400 372 530 352" fill="none" stroke="#f4f1e8" stroke-width="6" stroke-linecap="round"/>
+
+  <ellipse cx="400" cy="504" rx="140" ry="16" fill="#000000" opacity="0.06"/>
+</svg>

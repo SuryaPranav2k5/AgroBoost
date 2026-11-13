@@ -1,0 +1,312 @@
+@using System.Security.Claims
+@model AgroBoost.MVC.Models.Domain.Order
+
+@{
+    ViewData["Title"] = $"Order #{Model.OrderNumber}";
+    var isBuyer = User.IsInRole("Buyer") || User.IsInRole("Admin");
+
+    // The logged-in user's id: the cookie may expose it under the shorthand "sub"
+    // claim or the framework's ClaimTypes.NameIdentifier, so check both.
+    var currentUserId = User.FindFirst("sub")?.Value
+                        ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    var isSeller = User.IsInRole("Seller") && Model.SellerId == currentUserId;
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0"><i class="bi bi-receipt me-2"></i>Order @Model.OrderNumber</h1>
+        <a asp-controller="Order" asp-action="History" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Orders
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Order Header -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="mb-1">@Model.OrderNumber</h5>
+                    <small class="text-muted">Placed on @Model.OrderDate.ToString("dd MMM yyyy at hh:mm tt")</small>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="d-inline-flex align-items-center gap-2">
+                        <span class="badge bg-@(Model.Status switch { "Delivered" => "success", "Cancelled" => "danger", "Pending" => "warning", _ => "primary" }) fs-6 px-3 py-2">
+                            @Model.Status
+                        </span>
+                        @if (isSeller && (Model.Status == "Pending" || Model.Status == "Confirmed" || Model.Status == "Processing"))
+                        {
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                    Update Status
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('@Model.Id', 'Confirmed')">Confirm</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('@Model.Id', 'Processing')">Processing</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('@Model.Id', 'Shipped')">Ship</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('@Model.Id', 'Delivered')">Deliver</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item text-danger" href="#" onclick="updateStatus('@Model.Id', 'Cancelled')">Cancel</a></li>
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <small class="text-muted">Buyer</small>
+                    <div class="fw-bold">@Model.Buyer?.FullName</div>
+                    <small class="text-muted">@Model.Buyer?.Email</small>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted">Seller</small>
+                    <div class="fw-bold">@Model.Seller?.OrganizationName ?? Model.Seller?.FullName</div>
+                    @if (!string.IsNullOrEmpty(Model.Seller?.OrganizationType))
+                    {
+                        <span class="badge bg-info text-dark">@Model.Seller.OrganizationType</span>
+                    }
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted">Payment</small>
+                    <div class="fw-bold">@Model.PaymentMethod</div>
+                    <span class="badge bg-@(Model.PaymentStatus switch { "Paid" => "success", "Pending" => "warning", _ => "secondary" })">@Model.PaymentStatus</span>
+                </div>
+                <div class="col-md-3 text-md-end">
+                    <small class="text-muted">Total</small>
+                    <div class="fw-bold text-primary fs-4">₹@Model.TotalAmount.ToString("N2")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipping Address -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="bi bi-geo-alt-fill me-2"></i>Shipping Address</h5>
+        </div>
+        <div class="card-body">
+            <address class="mb-0">
+                @Model.ShippingAddress
+            </address>
+        </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Order Items (@Model.Items.Count)</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 40%;">Product</th>
+                            <th style="width: 15%;">Unit Price</th>
+                            <th style="width: 15%;">Qty</th>
+                            <th style="width: 15%;">Total</th>
+                            <th style="width: 15%;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="@(string.IsNullOrEmpty(item.Product.Images) ? "/images/product-placeholder.svg" : item.Product.Images.Split(',')[0].Trim())" 
+                                             alt="@item.Product.Name" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;" />
+                                        <div>
+                                            <h6 class="mb-1">@item.Product.Name</h6>
+                                            <small class="text-muted">/ @item.Product.Unit</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle">₹@item.UnitPrice.ToString("N2")</td>
+                                <td class="align-middle">@item.Quantity</td>
+                                <td class="align-middle fw-bold text-primary">₹@item.TotalPrice.ToString("N2")</td>
+                                <td class="align-middle">
+                                    <span class="badge bg-@(item.Order.Status switch { "Delivered" => "success", "Cancelled" => "danger", _ => "primary" })">
+                                        @item.Order.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white">
+            <div class="row text-end">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Subtotal</span>
+                        <span class="fw-bold">₹@Model.Items.Sum(i => i.TotalPrice).ToString("N2")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Shipping</span>
+                        <span class="text-success fw-bold">Free</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Tax (GST)</span>
+                        <span>Included</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between fw-bold fs-5">
+                        <span>Total</span>
+                        <span class="text-primary">₹@Model.TotalAmount.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Timeline -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Order Timeline</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-primary"></div>
+                    <div class="timeline-content">
+                        <h6 class="mb-1">Order Placed</h6>
+                        <small class="text-muted">@Model.OrderDate.ToString("dd MMM yyyy, hh:mm tt")</small>
+                    </div>
+                </div>
+                @if (Model.Status != "Pending")
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-info"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">Order Confirmed</h6>
+                            <small class="text-muted">Seller confirmed the order</small>
+                        </div>
+                    </div>
+                }
+                @if (Model.Status == "Processing" || Model.Status == "Shipped" || Model.Status == "Delivered")
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-secondary"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">Processing</h6>
+                            <small class="text-muted">Order is being prepared</small>
+                        </div>
+                    </div>
+                }
+                @if (Model.Status == "Shipped" || Model.Status == "Delivered")
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-warning text-dark"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">Shipped</h6>
+                            <small class="text-muted">Order is on the way</small>
+                        </div>
+                    </div>
+                }
+                @if (Model.Status == "Delivered")
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-success"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">Delivered</h6>
+                            <small class="text-muted">@Model.ActualDeliveryDate?.ToString("dd MMM yyyy")</small>
+                        </div>
+                    </div>
+                }
+                @if (Model.Status == "Cancelled")
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-danger"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">Cancelled</h6>
+                            <small class="text-muted">Order was cancelled</small>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 12px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-color: #e9ecef;
+    }
+    .timeline-item {
+        position: relative;
+        padding: 20px 0 20px 30px;
+    }
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+    .timeline-marker {
+        position: absolute;
+        left: -30px;
+        top: 20px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 0 0 2px #e9ecef;
+        z-index: 1;
+    }
+    .timeline-content h6 {
+        margin-bottom: 4px;
+    }
+</style>
+
+@section Scripts {
+    @if (isSeller)
+    {
+        <!-- The status update posts to a [ValidateAntiForgeryToken] action, so the
+             token must be rendered on this page (there is no form here to source it from). -->
+        @Html.AntiForgeryToken()
+    }
+    <script>
+        function updateStatus(orderId, status) {
+            if (confirm(`Update order status to "${status}"?`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/Seller/UpdateOrderStatus/${orderId}`;
+                
+                const statusInput = document.createElement('input');
+                statusInput.type = 'hidden';
+                statusInput.name = 'status';
+                statusInput.value = status;
+                form.appendChild(statusInput);
+                
+                const tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = '__RequestVerificationToken';
+                tokenInput.value = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                form.appendChild(tokenInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+}

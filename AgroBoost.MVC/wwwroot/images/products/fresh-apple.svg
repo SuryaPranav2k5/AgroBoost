@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="Fresh red apple">
+  <rect width="800" height="600" fill="#fdf1f0"/>
+  <circle cx="400" cy="300" r="192" fill="#fbe2e0"/>
+
+  <!-- stem -->
+  <path d="M400 272 C400 238 410 220 428 206" fill="none" stroke="#7a4a2b" stroke-width="11" stroke-linecap="round"/>
+  <!-- leaf -->
+  <path d="M428 232 C456 212 492 214 508 224 C492 250 452 254 428 242 Z" fill="#2d6a4f"/>
+
+  <!-- body -->
+  <path d="M400 270 C352 234 268 252 268 338 C268 420 332 472 400 472 C468 472 532 420 532 338 C532 252 448 234 400 270 Z" fill="#d94a4a"/>
+  <ellipse cx="400" cy="274" rx="28" ry="13" fill="#b83a3a"/>
+
+  <!-- highlight -->
+  <ellipse cx="338" cy="332" rx="24" ry="42" fill="#ffffff" fill-opacity="0.22" transform="rotate(-18 338 332)"/>
+
+  <ellipse cx="400" cy="504" rx="126" ry="16" fill="#000000" opacity="0.06"/>
+</svg>

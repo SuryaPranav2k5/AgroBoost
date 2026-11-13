@@ -1,0 +1,219 @@
+@model AgroBoost.MVC.Models.DTOs.AdminReportDto
+
+@{
+    ViewData["Title"] = "Platform Reports";
+}
+
+<div class="container py-4">
+    <h1 class="mb-4"><i class="bi bi-graph-up me-2"></i>Platform Reports</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card text-center border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="bi bi-people display-4 text-primary"></i>
+                    <h3 class="fw-bold mt-2">@Model?.TotalUsers</h3>
+                    <p class="text-muted mb-0">Total Users</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card text-center border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="bi bi-shop display-4 text-success"></i>
+                    <h3 class="fw-bold mt-2">@Model?.TotalSellers</h3>
+                    <p class="text-muted mb-0">Total Sellers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card text-center border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="bi bi-box-seam display-4 text-info"></i>
+                    <h3 class="fw-bold mt-2">@Model?.TotalProducts</h3>
+                    <p class="text-muted mb-0">Total Products</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card text-center border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="bi bi-currency-rupee display-4 text-warning"></i>
+                    <h3 class="fw-bold mt-2">₹@(Model?.TotalRevenue.ToString("N0") ?? "0")</h3>
+                    <p class="text-muted mb-0">Total Revenue</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Category Performance -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Category Performance</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model?.CategoryPerformance != null && Model.CategoryPerformance.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Products</th>
+                                        <th>Orders</th>
+                                        <th>Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var cat in Model.CategoryPerformance)
+                                    {
+                                        <tr>
+                                            <td>@cat.CategoryName</td>
+                                            <td>@cat.ProductCount</td>
+                                            <td>@cat.OrderCount</td>
+                                            <td class="fw-bold text-success">₹@cat.Revenue.ToString("N2")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center py-3">No category data available</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Geographic Distribution -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Geographic Distribution</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model?.GeographicDistribution != null && Model.GeographicDistribution.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>State</th>
+                                        <th>Sellers</th>
+                                        <th>Products</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var geo in Model.GeographicDistribution)
+                                    {
+                                        <tr>
+                                            <td>@geo.State</td>
+                                            <td class="fw-bold">@geo.SellerCount</td>
+                                            <td>@geo.ProductCount</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center py-3">No geographic data available</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Stats -->
+    <div class="row g-4 mt-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-shield-check me-2"></i>Verification Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center g-3">
+                        <div class="col-6">
+                            <div class="p-4 bg-success bg-opacity-10 rounded">
+                                <h3 class="fw-bold text-success mb-1">@Model?.VerifiedSellers</h3>
+                                <small class="text-muted">Verified Sellers</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-4 bg-warning bg-opacity-10 rounded">
+                                <h3 class="fw-bold text-warning mb-1">@Model?.PendingVerification</h3>
+                                <small class="text-muted">Pending Verification</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress mt-3" style="height: 12px;">
+                        @{
+                            var total = (Model?.VerifiedSellers ?? 0) + (Model?.PendingVerification ?? 0);
+                            var verifiedPct = total > 0 ? (double)(Model?.VerifiedSellers ?? 0) / total * 100 : 0;
+                        }
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @verifiedPct%" aria-valuenow="@verifiedPct" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="text-end mt-2">
+                        <small class="text-muted">@verifiedPct.ToString("F1")% verification rate</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-bag-check me-2"></i>Order Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center g-3">
+                        <div class="col-6">
+                            <div class="p-4 bg-primary bg-opacity-10 rounded">
+                                <h3 class="fw-bold text-primary mb-1">@Model?.TotalOrders</h3>
+                                <small class="text-muted">Total Orders</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-4 bg-success bg-opacity-10 rounded">
+                                <h3 class="fw-bold text-success mb-1">₹@(Model?.TotalRevenue.ToString("N0") ?? "0")</h3>
+                                <small class="text-muted">Total Revenue</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        @{
+                            var avgOrder = (Model?.TotalOrders ?? 0) > 0 ? (Model?.TotalRevenue ?? 0) / (Model?.TotalOrders ?? 1) : 0;
+                        }
+                        <div class="text-center">
+                            <small class="text-muted">Average Order Value: </small>
+                            <span class="fw-bold text-primary">₹@avgOrder.ToString("N2")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stat-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.15) !important;
+    }
+</style>

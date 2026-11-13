@@ -1,0 +1,138 @@
+@model dynamic
+
+@{
+    // This partial is used for two different types:
+    //   - Product                 (Home/Index featured products; Category & Seller navigations are loaded)
+    //   - ProductSearchResultDto  (Home/Search; flat seller/category fields from the stored procedure)
+    // Every access below is null-safe so a missing/null value never throws at runtime.
+
+    var productId = (int)Model.Id;
+    var productName = (string)Model.Name;
+    var productDescription = Model.Description as string;
+    var productUnit = (string)Model.Unit;
+    var productPrice = (decimal)Model.BasePrice;
+    var productStock = (int)Model.StockQty;
+    var productImages = Model.Images as string;
+    var productCertifications = Model.Certifications as string;
+
+    string? categoryName;
+    string? sellerName;
+    string? organizationType;
+    string? district;
+    string? state;
+
+    if (Model is AgroBoost.MVC.Models.Domain.Product product)
+    {
+        categoryName = product.Category?.Name;
+        sellerName = product.Seller?.OrganizationName ?? product.Seller?.FullName;
+        organizationType = product.Seller?.OrganizationType;
+        district = product.Seller?.District;
+        state = product.Seller?.State;
+    }
+    else
+    {
+        categoryName = Model.CategoryName as string;
+        sellerName = (Model.SellerName as string) ?? (Model.OrganizationName as string);
+        organizationType = Model.OrganizationType as string;
+        district = Model.District as string;
+        state = Model.State as string;
+    }
+
+    var hasImage = !string.IsNullOrWhiteSpace(productImages);
+    var imageUrl = hasImage ? productImages!.Split(',')[0].Trim() : "/images/product-placeholder.svg";
+
+    var location = string.Join(", ", new[] { district, state }.Where(v => !string.IsNullOrWhiteSpace(v)));
+    var hasSellerMeta = !string.IsNullOrWhiteSpace(sellerName) || !string.IsNullOrWhiteSpace(organizationType);
+
+    var certs = new List<string>();
+    if (!string.IsNullOrWhiteSpace(productCertifications))
+    {
+        try { certs = System.Text.Json.JsonSerializer.Deserialize<List<string>>(productCertifications) ?? new(); }
+        catch { if (productCertifications.Contains(",")) certs.AddRange(productCertifications.Split(',').Select(c => c.Trim())); else certs.Add(productCertifications); }
+    }
+}
+
+<div class="col-6 col-md-4 col-lg-3">
+    <div class="card product-card h-100 border-0 shadow-sm">
+        <a asp-controller="Product" asp-action="Details" asp-route-id="@productId"
+           class="product-card-link text-decoration-none text-dark d-flex flex-column h-100">
+
+            <div class="product-image-container">
+                @if (hasImage)
+                {
+                    <img src="@imageUrl" alt="@productName" class="product-image" loading="lazy"
+                         onerror="this.src='/images/product-placeholder.svg'; this.classList.add('product-image--empty');" />
+                }
+                else
+                {
+                    <img src="/images/product-placeholder.svg" alt="No image available" class="product-image product-image--empty" />
+                }
+
+                @if (certs.Any())
+                {
+                    <div class="product-certs">
+                        @foreach (var cert in certs.Take(2))
+                        {
+                            <span class="badge product-cert">@cert</span>
+                        }
+                    </div>
+                }
+
+                @if (productStock <= 0)
+                {
+                    <span class="badge bg-danger product-stock-flag">Out of Stock</span>
+                }
+            </div>
+
+            <div class="card-body d-flex flex-column">
+                @if (!string.IsNullOrWhiteSpace(categoryName))
+                {
+                    <span class="product-category">@categoryName</span>
+                }
+
+                <h6 class="product-title">@productName</h6>
+
+                @if (hasSellerMeta)
+                {
+                    <div class="product-meta">
+                        @if (!string.IsNullOrWhiteSpace(sellerName))
+                        {
+                            <span class="product-seller">@sellerName</span>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(organizationType))
+                        {
+                            <span class="badge product-org">@organizationType</span>
+                        }
+                    </div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(location))
+                {
+                    <div class="product-location">
+                        <i class="bi bi-geo-alt me-1"></i>@location
+                    </div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(productDescription))
+                {
+                    <p class="product-desc">@productDescription</p>
+                }
+
+                <div class="product-footer">
+                    <div class="product-price">
+                        ₹@productPrice.ToString("N0")<small class="ms-1">/ @productUnit</small>
+                    </div>
+
+                    @if (productStock > 0)
+                    {
+                        <span class="badge bg-success">In stock: @productStock</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Out of Stock</span>
+                    }
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

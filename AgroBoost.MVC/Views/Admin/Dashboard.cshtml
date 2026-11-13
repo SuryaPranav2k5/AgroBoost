@@ -1,0 +1,207 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var report = ViewBag.Report as AgroBoost.MVC.Models.DTOs.AdminReportDto;
+}
+
+<div class="container py-4">
+    <h1 class="mb-4"><i class="bi bi-shield-check me-2"></i>Admin Dashboard</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card text-center border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="bi bi-people display-4 text-primary"></i>
+                    <h3 class="fw-bold mt-2">@report?.TotalUsers</h3>
+                    <p class="text-muted mb-0">Total Users</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card text-center border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="bi bi-shop display-4 text-success"></i>
+                    <h3 class="fw-bold mt-2">@report?.TotalSellers</h3>
+                    <p class="text-muted mb-0">Total Sellers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card text-center border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="bi bi-person display-4 text-info"></i>
+                    <h3 class="fw-bold mt-2">@report?.TotalBuyers</h3>
+                    <p class="text-muted mb-0">Total Buyers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card text-center border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="bi bi-currency-rupee display-4 text-warning"></i>
+                    <h3 class="fw-bold mt-2">₹@(report?.TotalRevenue.ToString("N0") ?? "0")</h3>
+                    <p class="text-muted mb-0">Total Revenue</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Verification Stats -->
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-shield-check me-2"></i>Seller Verification</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center g-3">
+                        <div class="col-6">
+                            <div class="p-3 bg-success bg-opacity-10 rounded">
+                                <h3 class="fw-bold text-success mb-1">@report?.VerifiedSellers</h3>
+                                <small class="text-muted">Verified Sellers</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-warning bg-opacity-10 rounded">
+                                <h3 class="fw-bold text-warning mb-1">@report?.PendingVerification</h3>
+                                <small class="text-muted">Pending Verification</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress mt-3" style="height: 10px;">
+                        @{
+                            var totalSellers = (report?.VerifiedSellers ?? 0) + (report?.PendingVerification ?? 0);
+                            var verifiedPercent = totalSellers > 0 ? (double)(report?.VerifiedSellers ?? 0) / totalSellers * 100 : 0;
+                        }
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @verifiedPercent%" aria-valuenow="@verifiedPercent" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="text-end mt-2">
+                        <a asp-action="Sellers" class="btn btn-sm btn-outline-primary">Manage Sellers</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Stats -->
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-box-seam me-2"></i>Products Overview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center g-3">
+                        <div class="col-6">
+                            <div class="p-3 bg-primary bg-opacity-10 rounded">
+                                <h3 class="fw-bold text-primary mb-1">@report?.TotalProducts</h3>
+                                <small class="text-muted">Total Products</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-success bg-opacity-10 rounded">
+                                <h3 class="fw-bold text-success mb-1">@report?.ActiveProducts</h3>
+                                <small class="text-muted">Active Products</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress mt-3" style="height: 10px;">
+                        @{
+                            var activePercent = (report?.TotalProducts ?? 0) > 0 ? (double)(report?.ActiveProducts ?? 0) / (report?.TotalProducts ?? 1) * 100 : 0;
+                        }
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @activePercent%" aria-valuenow="@activePercent" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="text-end mt-2">
+                        <small class="text-muted">@activePercent.ToString("F1")% products active</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Stats -->
+    <div class="row g-4 mt-4">
+        <div class="col-md-4">
+            <div class="card stat-card text-center border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="bi bi-bag-check display-4 text-primary"></i>
+                    <h3 class="fw-bold mt-2">@report?.TotalOrders</h3>
+                    <p class="text-muted mb-0">Total Orders</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stat-card text-center border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="bi bi-currency-rupee display-4 text-success"></i>
+                    <h3 class="fw-bold mt-2">₹@(report?.TotalRevenue.ToString("N0") ?? "0")</h3>
+                    <p class="text-muted mb-0">Total Revenue</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stat-card text-center border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="bi bi-people display-4 text-info"></i>
+                    <h3 class="fw-bold mt-2">@report?.TotalUsers</h3>
+                    <p class="text-muted mb-0">Platform Users</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="bi bi-lightning-charge me-2"></i>Quick Actions</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <a asp-action="Sellers" class="btn btn-outline-primary w-100 py-3">
+                        <i class="bi bi-people display-6"></i>
+                        <div class="mt-2 fw-bold">Manage Sellers</div>
+                        <small class="text-muted">Verify, view, manage sellers</small>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a asp-action="Users" class="btn btn-outline-secondary w-100 py-3">
+                        <i class="bi bi-person-display display-6"></i>
+                        <div class="mt-2 fw-bold">Manage Users</div>
+                        <small class="text-muted">View all platform users</small>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a asp-action="Reports" class="btn btn-outline-success w-100 py-3">
+                        <i class="bi bi-graph-up display-6"></i>
+                        <div class="mt-2 fw-bold">Platform Reports</div>
+                        <small class="text-muted">Detailed analytics</small>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="/Home/Search" class="btn btn-outline-info w-100 py-3">
+                        <i class="bi bi-search display-6"></i>
+                        <div class="mt-2 fw-bold">Browse Products</div>
+                        <small class="text-muted">View all products</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stat-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.15) !important;
+    }
+</style>

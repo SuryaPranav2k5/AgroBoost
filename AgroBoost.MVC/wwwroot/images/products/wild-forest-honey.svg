@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="Jar of wild forest honey">
+  <rect width="800" height="600" fill="#fdf7ea"/>
+  <circle cx="400" cy="300" r="192" fill="#f9ecd2"/>
+
+  <!-- honeycomb hint -->
+  <g fill="#f6d98a" fill-opacity="0.6" stroke="#eec96f" stroke-width="4">
+    <path d="M236 190 l28 16 v32 l-28 16 l-28 -16 v-32 Z"/>
+    <path d="M292 158 l28 16 v32 l-28 16 l-28 -16 v-32 Z"/>
+  </g>
+
+  <!-- lid -->
+  <rect x="310" y="238" width="180" height="40" rx="10" fill="#6b4a24"/>
+  <rect x="310" y="238" width="180" height="13" rx="10" fill="#805b2e"/>
+
+  <!-- jar -->
+  <rect x="318" y="274" width="164" height="198" rx="16" fill="#f0ad33"/>
+  <rect x="318" y="274" width="164" height="44" rx="16" fill="#f7c04f"/>
+  <rect x="332" y="292" width="16" height="118" rx="8" fill="#ffffff" fill-opacity="0.45"/>
+
+  <!-- label -->
+  <rect x="336" y="362" width="128" height="54" rx="8" fill="#ffffff" fill-opacity="0.9"/>
+  <rect x="350" y="378" width="76" height="7" rx="3.5" fill="#e0cba0"/>
+  <rect x="350" y="393" width="48" height="7" rx="3.5" fill="#eaddc2"/>
+
+  <!-- dipper -->
+  <path d="M534 214 V330" fill="none" stroke="#a9762f" stroke-width="12" stroke-linecap="round"/>
+  <ellipse cx="534" cy="352" rx="28" ry="20" fill="#bf8a3c"/>
+  <path d="M534 372 q0 16 -8 22" fill="none" stroke="#f0ad33" stroke-width="8" stroke-linecap="round"/>
+
+  <ellipse cx="400" cy="506" rx="132" ry="16" fill="#000000" opacity="0.06"/>
+</svg>

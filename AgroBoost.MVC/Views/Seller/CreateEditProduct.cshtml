@@ -1,0 +1,211 @@
+@model AgroBoost.MVC.Models.Domain.Product
+
+@{
+    ViewData["Title"] = Model.Id > 0 ? "Edit Product" : "Add New Product";
+    var isEdit = Model.Id > 0;
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0"><i class="bi bi-@(isEdit ? "pencil" : "plus-circle") me-2"></i>@(isEdit ? "Edit Product" : "Add New Product")</h1>
+        <a asp-action="Products" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Products
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <form asp-action="@(isEdit ? "EditProduct" : "CreateProduct")" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        @if (isEdit)
+        {
+            <input type="hidden" name="Id" value="@Model.Id" />
+        }
+
+        <div class="row g-4">
+            <!-- Main Product Info -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Product Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label asp-for="Name" class="form-label">Product Name <span class="text-danger">*</span></label>
+                                <input asp-for="Name" class="form-control" placeholder="Enter product name" required />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="CategoryId" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select asp-for="CategoryId" class="form-select" required>
+                                    <option value="">Select Category</option>
+                                    @foreach (var cat in ViewBag.Categories)
+                                    {
+                                        var catSelected = Model.CategoryId == cat.Id ? "selected" : null;
+                                        <option value="@cat.Id" selected="@catSelected">@cat.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="Description" class="form-label">Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe your product, its features, quality, origin, etc."></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Unit" class="form-label">Unit <span class="text-danger">*</span></label>
+                                <select asp-for="Unit" class="form-select" required>
+                                    <option value="kg">Kilogram (kg)</option>
+                                    <option value="g">Gram (g)</option>
+                                    <option value="liter">Liter (L)</option>
+                                    <option value="ml">Milliliter (ml)</option>
+                                    <option value="piece">Piece</option>
+                                    <option value="pack">Pack</option>
+                                    <option value="box">Box</option>
+                                    <option value="dozen">Dozen</option>
+                                </select>
+                                <span asp-validation-for="Unit" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="BasePrice" class="form-label">Base Price (₹) <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₹</span>
+                                    <input asp-for="BasePrice" type="number" step="0.01" min="0.01" class="form-control" placeholder="0.00" required />
+                                </div>
+                                <span asp-validation-for="BasePrice" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="MinOrderQty" class="form-label">Minimum Order Quantity <span class="text-danger">*</span></label>
+                                <input asp-for="MinOrderQty" type="number" min="1" class="form-control" placeholder="1" required />
+                                <span asp-validation-for="MinOrderQty" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventory & Specifications -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Inventory & Specifications</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label asp-for="StockQty" class="form-label">Current Stock <span class="text-danger">*</span></label>
+                                <input asp-for="StockQty" type="number" min="0" class="form-control" placeholder="0" required />
+                                <span asp-validation-for="StockQty" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="ShelfLifeDays" class="form-label">Shelf Life (Days)</label>
+                                <input asp-for="ShelfLifeDays" type="number" min="1" class="form-control" placeholder="e.g., 180" />
+                                <span asp-validation-for="ShelfLifeDays" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Certifications" class="form-label">Certifications</label>
+                                <input asp-for="Certifications" class="form-control" placeholder="FSSAI, Organic, ISO, etc. (comma-separated)" />
+                                <div class="form-text">Enter certifications as comma-separated values (e.g., FSSAI, Organic, ISO 22000)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Image -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Product Image</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Upload Product Image</label>
+                                <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                                <div class="form-text">Max 5MB. Allowed: JPG, PNG, WebP</div>
+                            </div>
+                            <div class="col-md-6">
+                                @if (!string.IsNullOrEmpty(Model.Images))
+                                {
+                                    var currentImage = Model.Images.Split(',')[0].Trim();
+                                    <div class="mt-3">
+                                        <label class="form-label">Current Image</label>
+                                        <img src="@currentImage" alt="Current" class="img-thumbnail" style="max-height: 100px;" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar: Status & Actions -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top mb-4" style="top: 100px;">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Status & Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="IsActive" id="IsActive" @(Model.IsActive ? "checked" : "") />
+                            <label class="form-check-label fw-bold" for="IsActive">Product is Active</label>
+                        </div>
+                        <hr />
+                        @if (isEdit)
+                        {
+                            <p class="text-muted small mb-3">
+                                Created: @Model.CreatedAt.ToString("dd MMM yyyy")<br />
+                                Updated: @Model.UpdatedAt.ToString("dd MMM yyyy")
+                            </p>
+                        }
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-@(isEdit ? "check-circle" : "plus-circle") me-2"></i>@(isEdit ? "Update Product" : "Create Product")
+                            </button>
+                            <a asp-action="Products" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tips -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="bi bi-lightbulb me-1"></i>Tips for Better Sales</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="small text-muted mb-0">
+                            <li>Use clear, descriptive product names</li>
+                            <li>Add high-quality images showing the product</li>
+                            <li>Include certifications (FSSAI, Organic) to build trust</li>
+                            <li>Set competitive pricing</li>
+                            <li>Keep stock updated regularly</li>
+                            <li>Respond quickly to buyer inquiries</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Bootstrap form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+}

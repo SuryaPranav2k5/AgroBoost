@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="Bowl of basmati rice">
+  <rect width="800" height="600" fill="#f4f7f3"/>
+  <circle cx="400" cy="300" r="192" fill="#e6efe7"/>
+
+  <!-- falling grains -->
+  <g fill="#f3eedf">
+    <ellipse cx="356" cy="224" rx="13" ry="6" transform="rotate(-20 356 224)"/>
+    <ellipse cx="430" cy="206" rx="12" ry="6" transform="rotate(14 430 206)"/>
+    <ellipse cx="470" cy="242" rx="11" ry="5" transform="rotate(-8 470 242)"/>
+  </g>
+
+  <!-- rice mound -->
+  <ellipse cx="400" cy="330" rx="134" ry="58" fill="#fdfcf6"/>
+  <ellipse cx="400" cy="336" rx="148" ry="27" fill="#f6f4ea"/>
+
+  <!-- grains -->
+  <g fill="#eee8d6">
+    <ellipse cx="348" cy="312" rx="14" ry="7" transform="rotate(-18 348 312)"/>
+    <ellipse cx="392" cy="300" rx="14" ry="7" transform="rotate(10 392 300)"/>
+    <ellipse cx="438" cy="308" rx="14" ry="7" transform="rotate(-6 438 308)"/>
+    <ellipse cx="368" cy="326" rx="13" ry="6" transform="rotate(16 368 326)"/>
+    <ellipse cx="414" cy="324" rx="13" ry="6" transform="rotate(-12 414 324)"/>
+    <ellipse cx="458" cy="330" rx="12" ry="6" transform="rotate(8 458 330)"/>
+    <ellipse cx="326" cy="336" rx="12" ry="6" transform="rotate(-24 326 336)"/>
+    <ellipse cx="482" cy="316" rx="11" ry="5" transform="rotate(-16 482 316)"/>
+  </g>
+
+  <!-- bowl -->
+  <path d="M252 338 H548 Q536 470 400 476 Q264 470 252 338 Z" fill="#ffffff" stroke="#dfe7e0" stroke-width="5"/>
+  <path d="M270 352 Q400 372 530 352" fill="none" stroke="#eef2ec" stroke-width="6" stroke-linecap="round"/>
+
+  <ellipse cx="400" cy="504" rx="140" ry="16" fill="#000000" opacity="0.06"/>
+</svg>

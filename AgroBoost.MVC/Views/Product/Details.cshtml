@@ -1,0 +1,197 @@
+@model AgroBoost.MVC.Models.Domain.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+    var imageUrl = !string.IsNullOrEmpty(Model.Images) 
+        ? Model.Images.Split(',')[0].Trim() 
+        : "/images/product-placeholder.svg";
+    
+    var certs = new List<string>();
+    if (!string.IsNullOrEmpty(Model.Certifications))
+    {
+        try { certs = System.Text.Json.JsonSerializer.Deserialize<List<string>>(Model.Certifications) ?? new(); }
+        catch { if (Model.Certifications.Contains(",")) certs.AddRange(Model.Certifications.Split(',').Select(c => c.Trim())); else certs.Add(Model.Certifications); }
+    }
+}
+
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Search" asp-route-categoryId="@Model.CategoryId">@Model.Category?.Name</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Product Image Gallery -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <img src="@imageUrl" alt="@Model.Name" class="w-100" style="height: 500px; object-fit: cover;" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <span class="badge bg-primary me-1">@Model.Category?.Name</span>
+                        @if (!string.IsNullOrEmpty(Model.Seller?.OrganizationType))
+                        {
+                            <span class="badge bg-info text-dark me-1">@Model.Seller.OrganizationType</span>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Seller?.District) || !string.IsNullOrEmpty(Model.Seller?.State))
+                        {
+                            <span class="badge bg-light text-dark me-1">@Model.Seller.District, @Model.Seller.State</span>
+                        }
+                    </div>
+
+                    <h1 class="fw-bold mb-3">@Model.Name</h1>
+
+                    @if (certs.Any())
+                    {
+                        <div class="mb-3">
+                            @foreach (var cert in certs)
+                            {
+                                <span class="badge bg-success me-1">@cert</span>
+                            }
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-2">Description</h6>
+                            <p class="text-muted">@Model.Description</p>
+                        </div>
+                    }
+
+                    <!-- Seller Info -->
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-2"><i class="bi bi-shop me-2"></i>Sold by</h6>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                                    <span class="fw-bold">@Model.Seller?.FullName?[0]</span>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">@Model.Seller?.OrganizationName ?? Model.Seller?.FullName</div>
+                                    <small class="text-muted">@Model.Seller?.District, @Model.Seller?.State</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price & Quantity -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <label class="form-label">Unit</label>
+                            <input type="text" class="form-control" value="@Model.Unit" readonly />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Stock Available</label>
+                            <input type="text" class="form-control" value="@Model.StockQty" readonly />
+                        </div>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <!-- Price Display -->
+                    <div class="d-flex align-items-baseline mb-3">
+                        <span class="fw-bold text-primary fs-2 me-2">₹@Model.BasePrice.ToString("N2")</span>
+                        <span class="text-muted">/ @Model.Unit</span>
+                    </div>
+
+                    @if (Model.MinOrderQty > 1)
+                    {
+                        <div class="alert alert-info mb-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Minimum order quantity: @Model.MinOrderQty @Model.Unit
+                        </div>
+                    }
+
+                    <!-- Add to Cart Form -->
+                    @if (Model.StockQty > 0)
+                    {
+                        <form asp-controller="Cart" asp-action="Add" method="post" class="d-flex gap-2">
+                            <input type="hidden" name="productId" value="@Model.Id" />
+                            <div class="input-group" style="width: 140px;">
+                                <button type="button" class="btn btn-outline-secondary" onclick="decrementQty(this)">-</button>
+                                <input type="number" name="quantity" id="quantity" class="form-control text-center" value="@Model.MinOrderQty" min="@Model.MinOrderQty" max="@Model.StockQty" />
+                                <button type="button" class="btn btn-outline-secondary" onclick="incrementQty(this)">+</button>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                                <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary btn-lg w-100" disabled>
+                            <i class="bi bi-x-circle me-2"></i>Out of Stock
+                        </button>
+                    }
+
+                    <!-- Product Specs -->
+                    <div class="mt-4 pt-4 border-top">
+                        <h6 class="fw-bold mb-3">Specifications</h6>
+                        <table class="table table-sm table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td class="text-muted">Unit</td>
+                                    <td class="fw-bold">@Model.Unit</td>
+                                </tr>
+                                @if (Model.ShelfLifeDays.HasValue)
+                                {
+                                    <tr>
+                                        <td class="text-muted">Shelf Life</td>
+                                        <td class="fw-bold">@Model.ShelfLifeDays days</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td class="text-muted">Minimum Order</td>
+                                    <td class="fw-bold">@Model.MinOrderQty @Model.Unit</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">Stock Status</td>
+                                    <td>
+                                        @if (Model.StockQty > 0)
+                                        {
+                                            <span class="badge bg-success">In Stock (@Model.StockQty @Model.Unit)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Out of Stock</span>
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function incrementQty(btn) {
+            const input = btn.parentElement.querySelector('input[type="number"]');
+            const max = parseInt(input.max);
+            const current = parseInt(input.value);
+            if (current < max) input.value = current + 1;
+        }
+
+        function decrementQty(btn) {
+            const input = btn.parentElement.querySelector('input[type="number"]');
+            const min = parseInt(input.min);
+            const current = parseInt(input.value);
+            if (current > min) input.value = current - 1;
+        }
+    </script>
+}

@@ -1,0 +1,186 @@
+{
+  "Dairy Products": [
+    {
+      "url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&q=80",
+      "alt": "Glass milk bottles on wooden table",
+      "photographer": "Anita Jankovic",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80",
+      "alt": "Assorted cheese board with grapes",
+      "photographer": "Alexander Maasch",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1543353071-d2c2986e4b8a?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1543353071-d2c2986e4b8a?w=400&q=80",
+      "alt": "Greek yogurt with honey and nuts",
+      "photographer": "Catherine Lim",
+      "source": "Unsplash"
+    }
+  ],
+  "Fruits & Vegetables": [
+    {
+      "url": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=400&q=80",
+      "alt": "Colorful fresh fruits and vegetables",
+      "photographer": "Ja Ma",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&q=80",
+      "alt": "Organic vegetables at farmer's market",
+      "photographer": "Louis Hansel",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=400&q=80",
+      "alt": "Fresh mixed berries and fruits",
+      "photographer": "Pranjall Kumar",
+      "source": "Unsplash"
+    }
+  ],
+  "Grains & Cereals": [
+    {
+      "url": "https://images.pexels.com/photos/8545774/pexels-photo-8545774.jpeg",
+      "thumb": "https://images.pexels.com/photos/8545774/pexels-photo-8545774.jpeg?cs=tinysrgb&w=400",
+      "alt": "Golden wheat and barley grain heads in a field",
+      "photographer": "Ylanite Koppens",
+      "source": "Pexels"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1586201375144-3fb2d2c2b4f5?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1586201375144-3fb2d2c2b4f5?w=400&q=80",
+      "alt": "Variety of whole grains in bowls",
+      "photographer": "Monika Grabkowska",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1508747703725-719777637510?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1508747703725-719777637510?w=400&q=80",
+      "alt": "Rice grains close up",
+      "photographer": "Tetiana Bykovets",
+      "source": "Unsplash"
+    }
+  ],
+  "Oilseeds & Oils": [
+    {
+      "url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&q=80",
+      "alt": "Olive oil pouring into spoon",
+      "photographer": "Roberto Caruso",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1609507920143-5d2d7f91b394?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1609507920143-5d2d7f91b394?w=400&q=80",
+      "alt": "Sunflower seeds and oil bottle",
+      "photographer": "Tetiana Bykovets",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1508563363357-95c3d0b9c5e7?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1508563363357-95c3d0b9c5e7?w=400&q=80",
+      "alt": "Flax seeds in wooden bowl",
+      "photographer": "Marta Branco",
+      "source": "Unsplash"
+    }
+  ],
+  "Organic Products": [
+    {
+      "url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&q=80",
+      "alt": "Organic vegetables with certification",
+      "photographer": "Dan Gold",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80",
+      "alt": "Organic produce basket",
+      "photographer": "Sandy Millar",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400&q=80",
+      "alt": "Organic leafy greens",
+      "photographer": "Jonathan Kemper",
+      "source": "Unsplash"
+    }
+  ],
+  "Processed Foods": [
+    {
+      "url": "https://images.unsplash.com/photo-1547496502-affa22d38842?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1547496502-affa22d38842?w=400&q=80",
+      "alt": "Canned goods on shelf",
+      "photographer": "Dan Gold",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1583847268964-b28dc8fdf1f9?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1583847268964-b28dc8fdf1f9?w=400&q=80",
+      "alt": "Canned goods on shelf",
+      "photographer": "Peter Wendt",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1571191199867-50aa5d9a1131?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1571191199867-50aa5d9a1131?w=400&q=80",
+      "alt": "Frozen meals in packaging",
+      "photographer": "Giulia Bertelli",
+      "source": "Unsplash"
+    }
+  ],
+  "Pulses & Lentils": [
+    {
+      "url": "https://images.pexels.com/photos/1633973/pexels-photo-1633973.jpeg",
+      "thumb": "https://images.pexels.com/photos/1633973/pexels-photo-1633973.jpeg?cs=tinysrgb&w=400",
+      "alt": "Sacks of assorted beans and lentils at a market",
+      "photographer": "Ivan Rivero",
+      "source": "Pexels"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1596097502829-9a40d8f729a5?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1596097502829-9a40d8f729a5?w=400&q=80",
+      "alt": "Variety of dried beans and lentils",
+      "photographer": "Monika Grabkowska",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1602920941810-983b97d2b1c5?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1602920941810-983b97d2b1c5?w=400&q=80",
+      "alt": "Chickpeas in bowl",
+      "photographer": "Louis Hansel",
+      "source": "Unsplash"
+    }
+  ],
+  "Spices & Condiments": [
+    {
+      "url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80",
+      "alt": "Spice jars on wooden shelf",
+      "photographer": "Monika Grabkowska",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1511029652279-28b09f95c778?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1511029652279-28b09f95c778?w=400&q=80",
+      "alt": "Assorted spices in bowls",
+      "photographer": "K8",
+      "source": "Unsplash"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=1200&q=80",
+      "thumb": "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=400&q=80",
+      "alt": "Herbs and condiments",
+      "photographer": "Sandy Millar",
+      "source": "Unsplash"
+    }
+  ]
+}

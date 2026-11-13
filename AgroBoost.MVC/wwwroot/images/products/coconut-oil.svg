@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="Bottle of cold-pressed coconut oil with a coconut half">
+  <rect width="800" height="600" fill="#f4f8f8"/>
+  <circle cx="400" cy="300" r="192" fill="#e0eeee"/>
+
+  <!-- coconut half -->
+  <ellipse cx="566" cy="428" rx="54" ry="44" fill="#8b5e3c"/>
+  <ellipse cx="566" cy="428" rx="41" ry="32" fill="#fffdf5"/>
+  <ellipse cx="566" cy="428" rx="16" ry="12" fill="#f2f7f2"/>
+
+  <!-- cap -->
+  <rect x="372" y="196" width="56" height="30" rx="6" fill="#2d6a4f"/>
+  <!-- neck -->
+  <rect x="378" y="222" width="44" height="46" fill="#eef2dc"/>
+
+  <!-- body -->
+  <rect x="344" y="262" width="112" height="198" rx="18" fill="#f7f4d4" stroke="#dfe3c8" stroke-width="4"/>
+  <!-- oil level -->
+  <path d="M346 332 H454 V442 Q454 458 438 458 H362 Q346 458 346 442 Z" fill="#f2eeb8"/>
+  <line x1="348" y1="332" x2="452" y2="332" stroke="#e2dc9a" stroke-width="4"/>
+
+  <!-- label -->
+  <rect x="356" y="356" width="88" height="58" rx="8" fill="#ffffff" fill-opacity="0.94"/>
+  <rect x="368" y="372" width="52" height="7" rx="3.5" fill="#d9e2d9"/>
+  <rect x="368" y="387" width="34" height="7" rx="3.5" fill="#e6ede6"/>
+
+  <!-- glass highlight -->
+  <rect x="356" y="274" width="12" height="70" rx="6" fill="#ffffff" fill-opacity="0.8"/>
+
+  <ellipse cx="410" cy="506" rx="128" ry="16" fill="#000000" opacity="0.06"/>
+</svg>

@@ -1,0 +1,124 @@
+@model IEnumerable<AgroBoost.MVC.Models.DTOs.ProductSearchResultDto>
+
+@{
+    ViewData["Title"] = "Search Products";
+    var keyword = ViewBag.Keyword as string;
+    var categoryId = ViewBag.CategoryId as int?;
+    var minPrice = ViewBag.MinPrice as decimal?;
+    var maxPrice = ViewBag.MaxPrice as decimal?;
+    var sellerType = ViewBag.SellerType as string;
+    var currentPage = ViewBag.CurrentPage as int? ?? 1;
+    var totalPages = ViewBag.TotalPages as int? ?? 1;
+    var totalCount = ViewBag.TotalCount as int? ?? 0;
+}
+
+<div class="container py-4">
+    <!-- Search Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-funnel me-2"></i>Filters</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Home" asp-action="Search" method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Keyword</label>
+                            <input type="text" name="keyword" class="form-control" value="@keyword" placeholder="Search products..." />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Category</label>
+                            <select name="categoryId" class="form-select">
+                                <option value="">All Categories</option>
+                                @if (ViewBag.Categories != null)
+                                {
+                                    @foreach (var cat in ViewBag.Categories)
+                                    {
+                                        var catSelected = categoryId == cat.Id ? "selected" : null;
+                                        <option value="@cat.Id" selected="@catSelected">@cat.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Min Price (₹)</label>
+                            <input type="number" name="minPrice" step="0.01" class="form-control" value="@minPrice" placeholder="0" />
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Max Price (₹)</label>
+                            <input type="number" name="maxPrice" step="0.01" class="form-control" value="@maxPrice" placeholder="10000" />
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Header -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h4 class="mb-0">Search Results</h4>
+            <p class="text-muted mb-0">@totalCount product(s) found @(string.IsNullOrEmpty(keyword) ? "" : "for \"@keyword\"")</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-secondary" disabled>Sort by: @(ViewBag.SortBy ?? "Newest")</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="row g-4">
+            @foreach (var product in Model)
+            {
+                <partial name="~/Views/Product/_ProductCard.cshtml" model="product" />
+            }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages > 1)
+        {
+            <nav aria-label="Search results pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Search", new { keyword, categoryId, minPrice, maxPrice, sellerType, page = currentPage - 1 })" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        if (i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2))
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Search", new { keyword, categoryId, minPrice, maxPrice, sellerType, page = i })">@i</a>
+                            </li>
+                        }
+                        else if (i == currentPage - 3 || i == currentPage + 3)
+                        {
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        }
+                    }
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Search", new { keyword, categoryId, minPrice, maxPrice, sellerType, page = currentPage + 1 })" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-search display-1 text-muted"></i>
+            <h4 class="mt-3">No products found</h4>
+            <p class="text-muted">Try adjusting your search criteria or browse all categories.</p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Back to Home</a>
+        </div>
+    }
+</div>
