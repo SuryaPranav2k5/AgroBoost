@@ -8,6 +8,10 @@ new_images = {
         "url": "https://images.pexels.com/photos/8545774/pexels-photo-8545774.jpeg",
         "filename": "grains-cereals.jpg",
     },
+    "Processed Foods": {
+        "url": "https://images.pexels.com/photos/14934012/pexels-photo-14934012.jpeg",
+        "filename": "processed-foods.jpg",
+    },
     "Pulses & Lentils": {
         "url": "https://images.pexels.com/photos/1633973/pexels-photo-1633973.jpeg",
         "filename": "pulses-lentils.jpg",

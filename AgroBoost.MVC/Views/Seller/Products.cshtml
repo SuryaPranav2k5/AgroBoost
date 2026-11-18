@@ -10,6 +10,8 @@
         <a asp-action="CreateProduct" class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i>Add New Product</a>
     </div>
 
+    <p class="text-muted">Products shown here have been saved to your seller account.</p>
+
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">

@@ -76,7 +76,7 @@ public class SellerController : Controller
             .Where(c => c.IsActive)
             .OrderBy(c => c.Name)
             .ToListAsync();
-        return View();
+        return View("CreateEditProduct", new Product());
     }
 
     // POST: /Seller/CreateProduct
@@ -84,10 +84,17 @@ public class SellerController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateProduct(Product product, IFormFile? imageFile)
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return Challenge();
+
+        product.SellerId = user.Id;
+        ModelState.Remove(nameof(Product.SellerId));
+        ModelState.Remove(nameof(Product.Seller));
+        ModelState.Remove(nameof(Product.Category));
+
         if (ModelState.IsValid)
         {
-            var user = await _userManager.GetUserAsync(User);
-            product.SellerId = user!.Id;
             product.CreatedAt = DateTime.UtcNow;
             product.UpdatedAt = DateTime.UtcNow;
             product.IsActive = true;
@@ -109,7 +116,7 @@ public class SellerController : Controller
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Product created successfully.";
+            TempData["SuccessMessage"] = $"Product '{product.Name}' was created successfully and is now listed in My Products.";
             return RedirectToAction("Products");
         }
 
@@ -117,7 +124,7 @@ public class SellerController : Controller
             .Where(c => c.IsActive)
             .OrderBy(c => c.Name)
             .ToListAsync();
-        return View(product);
+        return View("CreateEditProduct", product);
     }
 
     // GET: /Seller/EditProduct/5
@@ -134,7 +141,7 @@ public class SellerController : Controller
             .Where(c => c.IsActive)
             .OrderBy(c => c.Name)
             .ToListAsync();
-        return View(product);
+        return View("CreateEditProduct", product);
     }
 
     // POST: /Seller/EditProduct/5
@@ -190,7 +197,7 @@ public class SellerController : Controller
             .Where(c => c.IsActive)
             .OrderBy(c => c.Name)
             .ToListAsync();
-        return View(existingProduct);
+        return View("CreateEditProduct", existingProduct);
     }
 
     // POST: /Seller/DeleteProduct/5

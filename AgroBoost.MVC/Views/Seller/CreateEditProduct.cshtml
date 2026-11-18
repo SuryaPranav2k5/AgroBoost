@@ -21,7 +21,11 @@
         </div>
     }
 
-    <form asp-action="@(isEdit ? "EditProduct" : "CreateProduct")" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+    <form id="productForm" asp-action="@(isEdit ? "EditProduct" : "CreateProduct")" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+        }
         @if (isEdit)
         {
             <input type="hidden" name="Id" value="@Model.Id" />
@@ -150,7 +154,7 @@
                     </div>
                     <div class="card-body">
                         <div class="form-check form-switch mb-3">
-                            <input class="form-check-input" type="checkbox" name="IsActive" id="IsActive" @(Model.IsActive ? "checked" : "") />
+                            <input asp-for="IsActive" class="form-check-input" />
                             <label class="form-check-label fw-bold" for="IsActive">Product is Active</label>
                         </div>
                         <hr />
@@ -162,9 +166,13 @@
                             </p>
                         }
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                            <button id="submitProductButton" type="submit" class="btn btn-primary btn-lg">
                                 <i class="bi bi-@(isEdit ? "check-circle" : "plus-circle") me-2"></i>@(isEdit ? "Update Product" : "Create Product")
                             </button>
+                            <div id="submitStatus" class="alert alert-info d-none mb-0" role="status" aria-live="polite">
+                                <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                                @(isEdit ? "Updating product..." : "Creating product...")
+                            </div>
                             <a asp-action="Products" class="btn btn-outline-secondary">Cancel</a>
                         </div>
                     </div>
@@ -202,6 +210,12 @@
                     if (!form.checkValidity()) {
                         event.preventDefault()
                         event.stopPropagation()
+                    } else {
+                        var submitButton = document.getElementById('submitProductButton')
+                        var submitStatus = document.getElementById('submitStatus')
+                        submitButton.disabled = true
+                        submitButton.classList.add('d-none')
+                        submitStatus.classList.remove('d-none')
                     }
                     form.classList.add('was-validated')
                 }, false)

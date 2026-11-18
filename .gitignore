@@ -85,6 +85,20 @@ venv/
 ENV/
 *.env
 
+# Node.js / NPM
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Presentation build tools, files & temporary artifacts
+ppt_build/
+*.pptx
+
+# Runtime user uploads (keep directory via .gitkeep)
+AgroBoost.MVC/wwwroot/uploads/*
+!AgroBoost.MVC/wwwroot/uploads/.gitkeep
+
 # OS generated files
 Thumbs.db
 ehthumbs.db
